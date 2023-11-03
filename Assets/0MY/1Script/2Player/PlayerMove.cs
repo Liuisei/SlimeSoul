@@ -10,6 +10,7 @@ public class PlayerMove : MonoBehaviour
     Rigidbody2D rb;
     Vector2 movementInput;
     [SerializeField] private float speed = 5f;
+    [SerializeField] PlayerAnimCon playerAnimCon;
 
     void Awake()
     {
@@ -41,18 +42,53 @@ public class PlayerMove : MonoBehaviour
 
     void OnMovePerformed(InputAction.CallbackContext ctx)
     {
+        if (!inputActions.Player.Move.enabled) return; // 移動アクションが無効の場合、処理をスキップ
+
         movementInput = ctx.ReadValue<Vector2>(); // 入力ベクトルを取得
+
+        playerAnimCon.SetMove(true);
     }
 
     void OnMoveCanceled(InputAction.CallbackContext ctx)
     {
+        if (!inputActions.Player.Move.enabled) return; // 移動アクションが無効の場合、処理をスキップ
+
         movementInput = Vector2.zero; // 入力ベクトルをゼロにリセット
+
+        playerAnimCon.SetMove(false);
     }
 
+    // Moveアクションの有効/無効を設定するメソッド
+    public void SetMoveActionDisable()
+    {
+        inputActions.Player.Move.Disable(); 
+    }
+
+    public void SetMoveActionEnable()
+    {
+        inputActions.Player.Move.Enable();
+    }
     void FixedUpdate()
     {
         Vector2 movement = movementInput.normalized; // 移動ベクトルを正規化
 
         rb.velocity = movement * speed; // 物理エンジンを使用してプレイヤーを移動させる
+
+        // プレイヤーの向きを変更
+        if (movement != Vector2.zero)
+        {
+            // 移動入力に基づいて右か左を向く
+            if (movement.x > 0)
+            {
+                // 右を向く
+                transform.localScale = new Vector3(1, 1, 1);
+            }
+            else if (movement.x < 0)
+            {
+                // 左を向く
+                transform.localScale = new Vector3(-1, 1, 1);
+            }
+        }
     }
+
 }
