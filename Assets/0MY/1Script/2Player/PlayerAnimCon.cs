@@ -12,9 +12,4 @@ public class PlayerAnimCon : MonoBehaviour
         animator.SetBool("Move", moveStatus);
     }
 
-
-
-
-
-
 }

@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMove : MonoBehaviour
 {
-    SlimeSoulInputSystem inputActions;
+    SlimeSoulInputSystem inputActionsSystem;
     Rigidbody2D rb;
     Vector2 movementInput;
     [SerializeField] private float speed = 5f;
@@ -14,7 +14,7 @@ public class PlayerMove : MonoBehaviour
 
     void Awake()
     {
-        inputActions = new SlimeSoulInputSystem(); // Input Systemのアクションを初期化
+        inputActionsSystem = new SlimeSoulInputSystem(); // Input Systemのアクションを初期化
     }
 
     void Start()
@@ -24,25 +24,25 @@ public class PlayerMove : MonoBehaviour
 
     void OnEnable()
     {
-        inputActions.Enable(); // Input Systemのアクションを有効化
+        inputActionsSystem.Enable(); // Input Systemのアクションを有効化
 
         // 移動アクションのコールバックを設定
-        inputActions.Player.Move.performed += OnMovePerformed; // 移動アクションが実行されたときの処理を設定
-        inputActions.Player.Move.canceled += OnMoveCanceled; // 移動アクションがキャンセルされたときの処理を設定
+        inputActionsSystem.Player.Move.performed += OnMovePerformed; // 移動アクションが実行されたときの処理を設定
+        inputActionsSystem.Player.Move.canceled += OnMoveCanceled; // 移動アクションがキャンセルされたときの処理を設定
     }
 
     void OnDisable()
     {
-        inputActions.Disable(); // Input Systemのアクションを無効化
+        inputActionsSystem.Disable(); // Input Systemのアクションを無効化
 
         // 移動アクションのコールバックを解除
-        inputActions.Player.Move.performed -= OnMovePerformed; // 移動アクションが実行されたときの処理を解除
-        inputActions.Player.Move.canceled -= OnMoveCanceled; // 移動アクションがキャンセルされたときの処理を解除
+        inputActionsSystem.Player.Move.performed -= OnMovePerformed; // 移動アクションが実行されたときの処理を解除
+        inputActionsSystem.Player.Move.canceled -= OnMoveCanceled; // 移動アクションがキャンセルされたときの処理を解除
     }
 
     void OnMovePerformed(InputAction.CallbackContext ctx)
     {
-        if (!inputActions.Player.Move.enabled) return; // 移動アクションが無効の場合、処理をスキップ
+        if (!inputActionsSystem.Player.Move.enabled) return; // 移動アクションが無効の場合、処理をスキップ
 
         movementInput = ctx.ReadValue<Vector2>(); // 入力ベクトルを取得
 
@@ -51,7 +51,7 @@ public class PlayerMove : MonoBehaviour
 
     void OnMoveCanceled(InputAction.CallbackContext ctx)
     {
-        if (!inputActions.Player.Move.enabled) return; // 移動アクションが無効の場合、処理をスキップ
+        if (!inputActionsSystem.Player.Move.enabled) return; // 移動アクションが無効の場合、処理をスキップ
 
         movementInput = Vector2.zero; // 入力ベクトルをゼロにリセット
 
@@ -61,13 +61,14 @@ public class PlayerMove : MonoBehaviour
     // Moveアクションの有効/無効を設定するメソッド
     public void SetMoveActionDisable()
     {
-        inputActions.Player.Move.Disable(); 
+        inputActionsSystem.Player.Move.Disable(); 
     }
 
     public void SetMoveActionEnable()
     {
-        inputActions.Player.Move.Enable();
+        inputActionsSystem.Player.Move.Enable();
     }
+
     void FixedUpdate()
     {
         Vector2 movement = movementInput.normalized; // 移動ベクトルを正規化
