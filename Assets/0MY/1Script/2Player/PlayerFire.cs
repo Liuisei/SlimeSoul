@@ -12,8 +12,6 @@ public class PlayerFire : MonoBehaviour
     [SerializeField, Range(0.1f, 10f)] int _coolTime;
     [SerializeField, Range(1, 10)] int _buletSpeed;
     [SerializeField] bool _outoFire;
-    Transform targetTransform; // terget enemy
-    List<EnemyHP> enemyHPs = new List<EnemyHP>(); // enemy intrigger
 
     bool _cooloff = true;
 
@@ -41,36 +39,10 @@ public class PlayerFire : MonoBehaviour
         _cooloff = false;
         GameObject newBullet = Instantiate(_bullet, _firepoint);
         newBullet.transform.parent = null;
-        if (targetTransform != null) newBullet.transform.up = (targetTransform.position - transform.position).normalized;
         newBullet.GetComponent<Rigidbody2D>().velocity = newBullet.transform.up * _buletSpeed;
         yield return new WaitForSeconds(_coolTime);
         _cooloff = true;
         if (_outoFire) Fire();
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.TryGetComponent<EnemyHP>(out EnemyHP enemyHP))
-        {
-            enemyHPs.Add(enemyHP);
-            UpdateTarget();
-        }
-    }
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.TryGetComponent<EnemyHP>(out EnemyHP enemyHP))
-        {
-            enemyHPs.Remove(enemyHP);
-            UpdateTarget();
-        }
-    }
-    void UpdateTarget()
-    {
-        targetTransform = enemyHPs.OrderBy(enemy => Vector2.Distance(transform.position, enemy.transform.position)).FirstOrDefault()?.transform;
-    }
-    public Transform GetTarget()
-    {
-        return targetTransform;
     }
     //Seter
     public void OutoFireSet(InputAction.CallbackContext ctx)

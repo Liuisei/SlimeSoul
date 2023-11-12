@@ -217,9 +217,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hpText: {fileID: 0}
   sliderHP: {fileID: 0}
-  maxHP: 10
-  hp: 10
-  spriteRenderer: {fileID: 0}
+  maxHP: 100
+  hp: 100
+  spriteRenderer: {fileID: 6092548361489307670}
   colorChange: 1
 --- !u!1 &3821230028582547112
 GameObject:
