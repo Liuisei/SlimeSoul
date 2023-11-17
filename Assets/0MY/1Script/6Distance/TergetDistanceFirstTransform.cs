@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -6,12 +7,8 @@ public abstract class TergetDistanceFirstTransform<T> : MonoBehaviour where T : 
 {
     Transform targetTransform;
     List<T> enemyHPs = new List<T>();
-    [SerializeField] LookAt lookAt;
+    public Action<Transform> onTargetUpdate; // ここにACTIONを作って　ターゲットが更新されたら　くっついてるメソッドにターゲットのトランスフォームを渡す
 
-    private void Start()
-    {
-        if (lookAt == null) Debug.LogError(" looAt is null"); 
-    }
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.TryGetComponent<T>(out T enemyHP))
@@ -34,15 +31,11 @@ public abstract class TergetDistanceFirstTransform<T> : MonoBehaviour where T : 
 
         if (targetTransform != null)
         {
-            lookAt.SetTarget(targetTransform);
+            onTargetUpdate?.Invoke(targetTransform);
         }
         else
         {
-            lookAt.SetTarget(transform);
+            onTargetUpdate?.Invoke(null);
         }
-    }
-    public Transform GetTarget()
-    {
-        return targetTransform;
     }
 }
