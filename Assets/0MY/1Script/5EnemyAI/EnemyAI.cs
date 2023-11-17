@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
+    [SerializeField] EnemyTergetDistance enemyTergetDistance;
     [SerializeField] Rigidbody2D rb2;
     Transform target;
     [SerializeField] int moveSpeed = 100;
@@ -30,28 +31,40 @@ public class EnemyAI : MonoBehaviour
 
     void RandomMove()
     {
-        rb2.AddForce(new Vector2(Random.Range(-1, 1), Random.Range(-1, 1)) * Random.Range(1, moveSpeed));
+        rb2.AddForce(Random.insideUnitCircle.normalized * Random.Range(1, moveSpeed));
         Debug.Log("RandomMove");
     }
+
     void MooveToPlayer()
     {
         rb2.AddForce(moveSpeed * (Vector2)(target.position - transform.position).normalized);
         Debug.Log("MooveToPlayer");
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    public void SetTarget(Transform newTarget)
     {
-        if (collision.TryGetComponent<PlayerHP>(out PlayerHP PHP))
+        target = newTarget;
+
+        if (target != null)
         {
-            if (target == null) target = collision.transform;
-            InvokeRepeating("EnemyAIRepit", 1f, 2f);
+            if (!IsInvoking("EnemyAIRepit"))
+            {
+                InvokeRepeating("EnemyAIRepit", 1f, 2f);
+            }
         }
-    }
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.transform == target)
+        else
         {
-            target = null;
             CancelInvoke("EnemyAIRepit");
         }
+    }
+
+
+    private void OnEnable()
+    {
+        enemyTergetDistance.onTargetUpdate += SetTarget;
+    }
+    private void OnDisable()
+    {
+        enemyTergetDistance.onTargetUpdate -= SetTarget;
     }
 }

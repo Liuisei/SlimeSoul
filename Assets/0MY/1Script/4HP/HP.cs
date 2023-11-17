@@ -43,20 +43,7 @@ public abstract class HP : MonoBehaviour
         if (spriteRenderer != null && colorChange == true) spriteRenderer.color = Color.Lerp(Color.red, Color.white, (float)GetHP() / (float)GetMaxHP());
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.transform.TryGetComponent<IDamage>(out IDamage damage))
-        {
-            HPaddValue(damage.GetDamage());
-        }
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.TryGetComponent<IDamage>(out IDamage damage))
-        {
-            HPaddValue(damage.GetDamage());
-        }
-    }
+
     public virtual void HpUnder0()
     {
         Debug.Log("Die" + this);
