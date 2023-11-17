@@ -1,16 +1,25 @@
 using UnityEngine;
 
-public  class Bullet : MonoBehaviour ,IDamage
+public abstract class Bullet : MonoBehaviour
 {
-    [SerializeField] int _damege = -10;
+    [SerializeField] protected int _damege = -10;
 
-    public int GetDamage()
-    {
-        return _damege;
-    }
+
     public void SetDamage(int value)
     {
         _damege = value;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        HitoperaterCollision(collision);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        HitoperaterTrigger(collision);
+    }
+
+    abstract public void HitoperaterCollision(Collision2D collision);
+    abstract public void HitoperaterTrigger(Collider2D collision);
 }
