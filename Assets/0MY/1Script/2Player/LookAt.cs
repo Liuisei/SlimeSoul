@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public  class LookAt : MonoBehaviour
+public abstract class LookAt : MonoBehaviour
 {
     /// <summary>  見るターゲット　/// </summary>
     [SerializeField] Transform _tergetTransform;
@@ -9,6 +9,17 @@ public  class LookAt : MonoBehaviour
 
     [SerializeField] bool _permission = false;
 
+    /// <summary>
+    /// actionSet(); で　SetTarget(Transform targetTransform)//ターゲット　の　セット　を外部の目スクリプトのACTIONにセットして下さい
+    /// </summary>
+    abstract public void OnEnableSetAction();
+
+    /// <summary>
+    /// actionSet(); で　SetTarget(Transform targetTransform)//ターゲット　の　セット　を外部の目スクリプトのACTIONに`解除して下さい
+    /// </summary>
+    abstract public void OnDisableRemoveAction();
+
+
     protected virtual void FixedUpdate()
     {
         if (_tergetTransform != null)
@@ -16,19 +27,23 @@ public  class LookAt : MonoBehaviour
             _observer.transform.up = (_tergetTransform.position - transform.position).normalized;//ターゲット　の　方向を上にする
         }
     }
-    
-    public void SetTarget(Transform targetTransform)//ターゲット　の　セット
+    protected void SetTarget(Transform targetTransform)//ターゲット　の　セット
     {
         _tergetTransform = targetTransform;
     }
 
-    public void SetPremission(bool permission)//許可
+    protected void SetPremission(bool permission)//許可
     {
         _permission = permission;
     }
-
-    public void SetObserver(Transform newObserver)//見る側
+    private void OnEnable()
     {
-        _observer = newObserver;
+        OnEnableSetAction ();
     }
+    private void OnDisable()
+    {
+        OnDisableRemoveAction();
+    }
+
+
 }
