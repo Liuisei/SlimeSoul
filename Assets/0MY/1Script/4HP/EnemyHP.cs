@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StoneHP : EnemyHP
+public abstract class EnemyHP : HP
 {
+
 
 }
