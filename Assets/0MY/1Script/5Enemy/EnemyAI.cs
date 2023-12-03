@@ -9,7 +9,8 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] Rigidbody2D rb2;
     Transform target;
     [SerializeField] int moveSpeed = 100;
-    // Start is called before the first frame update
+    [SerializeField] EnemyFire enemyFire;
+    [SerializeField] Animator animator;
     void Start()
     {
         if (rb2 == null) Debug.LogError(rb2 + "nuLL");
@@ -17,31 +18,23 @@ public class EnemyAI : MonoBehaviour
     void EnemyAIRepit()
     {
         // ランダムに選択
-        int randomChoice = Random.Range(0, 2);
+        int randomChoice = Random.Range(0, 3);
 
         if (randomChoice == 0)
         {
             RandomMove();
         }
-        else
+        else if (randomChoice == 1)
         {
             MooveToPlayer();
         }
+        else if (randomChoice == 2)
+        {
+            ATKanim();
+        }
     }
 
-    void RandomMove()
-    {
-        rb2.AddForce(Random.insideUnitCircle.normalized * Random.Range(1, moveSpeed));
-        Debug.Log("RandomMove");
-    }
-
-    void MooveToPlayer()
-    {
-        rb2.AddForce(moveSpeed * (Vector2)(target.position - transform.position).normalized);
-        Debug.Log("MooveToPlayer");
-    }
-
-    public void SetTarget(Transform newTarget)
+    public void SetTarget(Transform newTarget) // enemyTergetDistance.onTargetUpdate がでターゲットが更新される時発動する　
     {
         target = newTarget;
 
@@ -58,7 +51,6 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-
     private void OnEnable()
     {
         enemyTergetDistance.onTargetUpdate += SetTarget;
@@ -67,4 +59,28 @@ public class EnemyAI : MonoBehaviour
     {
         enemyTergetDistance.onTargetUpdate -= SetTarget;
     }
+
+    void RandomMove()
+    {
+        rb2.AddForce(Random.insideUnitCircle.normalized * Random.Range(1, moveSpeed));
+        Debug.Log("RandomMove");
+    }
+
+    void MooveToPlayer()
+    {
+        rb2.AddForce(moveSpeed * (Vector2)(target.position - transform.position).normalized);
+        Debug.Log("MooveToPlayer");
+    }
+
+    void ATKanim()//アニメーションを発動して　animから　atk発動
+    {
+        animator.SetTrigger("ATK");
+    }
+
+    void ATK()
+    {
+        enemyFire.Fire();
+        Debug.Log("EnemyFire");
+    }
+
 }
