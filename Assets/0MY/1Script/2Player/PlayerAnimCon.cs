@@ -12,4 +12,10 @@ public class PlayerAnimCon : MonoBehaviour
         animator.SetBool("Move", moveStatus);
     }
 
+    public void Eat()
+    {
+        animator.SetTrigger("Eat");
+    }
+
+
 }

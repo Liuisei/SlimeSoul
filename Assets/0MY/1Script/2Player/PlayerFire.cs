@@ -9,7 +9,7 @@ public class PlayerFire : MonoBehaviour
     SlimeSoulInputSystem inputActionsSystem;
     [SerializeField] GameObject _bullet;
     [SerializeField] Transform _firepoint;
-    [SerializeField, Range(0.1f, 10f)] int _coolTime;
+    [SerializeField, Range(0.1f, 10f)] float _coolTime;
     [SerializeField, Range(1, 10)] int _buletSpeed;
     [SerializeField] bool _outoFire;
 
@@ -23,6 +23,7 @@ public class PlayerFire : MonoBehaviour
     {
         inputActionsSystem.Enable(); // Input Systemのアクションを有効化
         inputActionsSystem.Player.Fire.started += OutoFireSet;
+
     }
     void OnDisable()
     {
@@ -45,12 +46,31 @@ public class PlayerFire : MonoBehaviour
         if (_outoFire) Fire();
     }
     //Seter
+
+    public void SetBullet(GameObject NewBullet )
+    {
+        _bullet = NewBullet;
+    }
+
+    public void SetCoolTime(float NewCooltime)
+    {
+        _coolTime = NewCooltime;
+    }
+
+    public void SetSpeed(int NewSpeed )
+    {
+        _buletSpeed = NewSpeed;
+    }
+
+
     public void OutoFireSet(InputAction.CallbackContext ctx)
     {
         _outoFire = !_outoFire;
         if (_outoFire) Fire();
         Debug.Log(_outoFire + "_outoFire");
     }
+
+
 
     //Geter
 

@@ -44,10 +44,8 @@ public abstract class HP : MonoBehaviour
     }
 
 
-    public virtual void HpUnder0()
-    {
-        Debug.Log("Die" + this);
-    }
+    protected abstract void HpUnder0();
+
     public virtual void HpOverMax()
     {
         hp = maxHP;

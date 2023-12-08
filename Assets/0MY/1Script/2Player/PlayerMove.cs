@@ -12,6 +12,10 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float speed = 5f;
     [SerializeField] PlayerAnimCon playerAnimCon;
 
+    public UnityEngine.Events.UnityEvent onButtonClickEat;
+    public UnityEngine.Events.UnityEvent onButtonClickEatStop;
+
+
     void Awake()
     {
         inputActionsSystem = new SlimeSoulInputSystem(); // Input Systemのアクションを初期化
@@ -29,6 +33,8 @@ public class PlayerMove : MonoBehaviour
         // 移動アクションのコールバックを設定
         inputActionsSystem.Player.Move.performed += OnMovePerformed; // 移動アクションが実行されたときの処理を設定
         inputActionsSystem.Player.Move.canceled += OnMoveCanceled; // 移動アクションがキャンセルされたときの処理を設定
+        inputActionsSystem.Player.Eat.started += PlayerEat;
+
     }
 
     void OnDisable()
@@ -61,7 +67,7 @@ public class PlayerMove : MonoBehaviour
     // Moveアクションの有効/無効を設定するメソッド
     public void SetMoveActionDisable()
     {
-        inputActionsSystem.Player.Move.Disable(); 
+        inputActionsSystem.Player.Move.Disable();
     }
 
     public void SetMoveActionEnable()
@@ -90,6 +96,25 @@ public class PlayerMove : MonoBehaviour
                 transform.localScale = new Vector3(-1, 1, 1);
             }
         }
+    }
+
+
+    private void PlayerEat(InputAction.CallbackContext ctx)
+    {
+        // UnityEventが設定されていれば、それを実行
+        onButtonClickEat?.Invoke();
+
+        // ここに任意の処理を追加
+        Debug.Log("Button Clicked!");
+
+        CancelInvoke("PlayerEatStop");
+        Invoke("PlayerEatStop", 1);
+    }
+
+    public void PlayerEatStop()
+    {
+        onButtonClickEatStop?.Invoke();
+
     }
 
 }
